@@ -16,7 +16,7 @@ reported in the paper.
 
 | Not included | Reason |
 |---|---|
-| The raw TLE archive **from Git** | [`data/starlink_tle.csv`](data/README.md) is the complete 4.57 M-row / 8,430-satellite history, but it is 753 MB and exceeds GitHub's 100 MB per-file limit. It is excluded via `.gitignore` and distributed with the Zenodo record. |
+| The raw TLE archive | [`data/starlink_tle.csv`](data/README.md) is the complete 4.57 M-row / 8,430-satellite history. It is 753 MB, which exceeds GitHub's 100 MB per-file limit, **and it is not redistributed anywhere**: Space-Track's User Agreement forbids transferring U.S. Government data to a third party. It is excluded via `.gitignore`; obtain your own export as described in [`data/DATA_ACCESS.md`](data/DATA_ACCESS.md). |
 | Model checkpoints (`.pth`) | Large; can be regenerated with the Part-B scripts. |
 
 ---
@@ -29,8 +29,8 @@ reported in the paper.
 ├── LICENSE                      # MIT (code); derived data are CC BY 4.0 — see Licence
 ├── requirements.txt
 ├── run_all_analyses.py          # runs every Part-A script and prints PASS/FAIL
-├── .gitignore                     # excludes the 753 MB TLE archive (Zenodo — see data/README.md)
-├── data/                        # raw TLE input (753 MB — Zenodo, not in Git)
+├── .gitignore                     # excludes the 753 MB TLE archive (not redistributed; see data/DATA_ACCESS.md)
+├── data/                        # raw TLE input (753 MB, not redistributed)
 ├── preprocess/                  # data-preparation chain (TLE -> training samples)
 │   └── legacy/                  # superseded 5-satellite debug branch
 ├── analysis/                    # all analysis code
@@ -132,12 +132,12 @@ from this repository alone.** It requires:
 
 See [`preprocess/README.md`](preprocess/README.md) for the full chain diagram, the required inputs and the
 design decisions behind each step. In short, the chain is **complete** and needs only one external input:
-the TLE history `starlink_tle.csv` (columns `norad_id`, `tle`), which must be re-fetched from
-[Space-Track](https://www.space-track.org) — see [Data provenance](#data-provenance).
+the TLE history `starlink_tle.csv` (columns `norad_id`, `tle`), which you export yourself from Space-Track —
+see [`data/DATA_ACCESS.md`](data/DATA_ACCESS.md) and [Data provenance](#data-provenance).
 
 | # | Script | Reads | Writes |
 |---|---|---|---|
-| 1 | `tle_to_trajectory.py` | `starlink_tle.csv` (753 MB; download from Zenodo — see [`data/README.md`](data/README.md)) | `starlink_trajectory_sgp4.csv` — every TLE propagated with SGP4 over [epoch − 1 h, epoch + 12 h] at 5-min steps, then stitched so that *the newest TLE wins at every instant* |
+| 1 | `tle_to_trajectory.py` | `starlink_tle.csv` (753 MB; obtain from Space-Track — see [`data/DATA_ACCESS.md`](data/DATA_ACCESS.md)) | `starlink_trajectory_sgp4.csv` — every TLE propagated with SGP4 over [epoch − 1 h, epoch + 12 h] at 5-min steps, then stitched so that *the newest TLE wins at every instant* |
 | 2 | `mechanical_energy.py` | `starlink_trajectory_sgp4.csv` | `maneuver_summary_starlink.csv` — per-satellite manoeuvre detection from jumps in specific mechanical energy (threshold = 5σ of the energy difference). *Also deposited in `figures/data/`* |
 | 3 | `training_data_extract_500_pair.py` | `maneuver_summary_starlink.csv`, `starlink_trajectory_sgp4.csv`, `starlink_tle.csv` | `training_pairs_500.csv` — stratified sample of 500 manoeuvre-active satellites (high/mid/low frequency = 50/200/250), manoeuvre detection per satellite, and conditioning/target window pairs (288 + 864 points) |
 | 4 | `preprocess_500_satellites.py` | the same three files + `training_pairs_500.csv` | `starlink_trajectory_500.csv`, `starlink_tle_500.csv`, `training_pairs_500_final.csv` — re-derives the identical 500-satellite sample (same seed) and materialises the subsets |
@@ -211,8 +211,11 @@ Note that this reads the legacy `figures/fig2_cdf.csv` (see the caveat above).
 
 * **Raw TLE data** — Space-Track (<https://www.space-track.org>), 18th Space Defense Squadron. Free, but
   requires an account. The complete history used here (4,572,892 TLEs, 8,430 satellites, epochs
-  2024-03-10 … 2025-08-09) is distributed with this release through Zenodo — see
-  [`data/README.md`](data/README.md). Check Space-Track's User Agreement before republishing it.
+  2024-03-10 … 2025-08-09) is **not redistributed**, here or on Zenodo: Space-Track's
+  User Agreement forbids transferring U.S. Government data to any other entity without prior express
+  approval (10 U.S.C. 2274(c)(2)). Export it yourself — see [`data/DATA_ACCESS.md`](data/DATA_ACCESS.md).
+  The same agreement states that a public TLE "should not be used for conjunction assessment
+  prediction"; the manuscript uses the collision-risk quantity only as an illustrative analogy (section 5.8).
 * **Derived data** in `figures/data/` — produced by the authors from those TLEs (879 satellites,
   14,799 samples; 8,835 manoeuvre samples). Released here under CC BY 4.0.
 * **Independent validation ephemeris** — public SpaceX operational ephemeris files; see §5.7 of the
@@ -228,7 +231,9 @@ Note that this reads the legacy `figures/fig2_cdf.csv` (see the caveat above).
 
 * **Code** (`analysis/`, `figures/*.py`, `figures/*.ps1`, `run_all_analyses.py`) — MIT, see [LICENSE](LICENSE).
 * **Derived data** (`figures/data/`, `figures/fig2_cdf.csv`) — CC BY 4.0.
-* Third-party raw data (Space-Track TLE history) remains under its own terms and is not redistributed here.
+* **Raw TLE data** (`data/starlink_tle.csv`) is third-party U.S. Government data (18 SDS, distributed
+  via Space-Track). The authors assert no rights over it and claim no licence over it. It is excluded
+  from Git and **not redistributed**, here or on Zenodo - see [`data/DATA_ACCESS.md`](data/DATA_ACCESS.md).
 
 ---
 
@@ -241,9 +246,9 @@ Yang K. Code for "Risk-constrained deployment of AI correction for LEO orbit pre
 Physics-inspired soft masking and fail-safe gating" [software]. Zenodo; 2026.
 https://doi.org/10.5281/zenodo.23098904
 
-Yang K. Starlink TLE history used for "Risk-constrained deployment of AI correction for LEO
-orbit prediction" [dataset]. Zenodo; 2026. https://doi.org/10.5281/zenodo.XXXXXXX   <!-- TODO: fill after the
-dataset record is created; see data/ZENODO_DATASET_RECORD.md -->
+The raw TLE input has **no DOI** and is not distributed. Cite its source directly:
+
+Space-Track. Two-Line Element Sets. https://www.space-track.org (accessed 2026).
 ```
 
 ---

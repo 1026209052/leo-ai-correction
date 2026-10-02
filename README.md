@@ -93,29 +93,19 @@ table to stdout; none of them needs a GPU or the raw TLE archive.
 | `c1_independent_tail.py` | §5.7 — tail metrics on the earlier independent-source run | `data/spacex_68p4_verification.csv` |
 | `s57_from_csv.py` | §5.7 — every quantity of Table 11 recomputed from the independent-source CSV | `data/spacex_v5_verification.csv` |
 
-### ⚠️ `fig2_cdf.csv` vs `fig2_cdf_oldmodel.csv`
+### ⚠️ Use `fig2_cdf.csv`, not `fig2_cdf_oldmodel.csv`
 
-`figures/data/` holds **two files with the same 817 samples but different per-sample `eta` values**,
-from two model generations:
+`figures/data/` has two per-sample files covering the same 817 samples but holding different `eta`
+values, from two model generations:
 
-| File | Content | Used by |
-|---|---|---|
-| `figures/data/fig2_cdf.csv` | per-sample eta of the **final model** — the values reported in the paper | every Part-A script, incl. `tail_analysis.py` and `make_fig2_data.py` |
-| `figures/data/fig2_cdf_oldmodel.csv` | per-sample eta of an **earlier (pre-refit) generation** | **nothing** — kept for traceability only |
+| File | Role |
+|---|---|
+| `figures/data/fig2_cdf.csv` | **final model** — the values reported in the paper; read by every Part-A script |
+| `figures/data/fig2_cdf_oldmodel.csv` | an earlier pre-refit generation; **read by no script**, kept for traceability only |
 
-Always use `figures/data/fig2_cdf.csv`. The `_oldmodel` file is not an input to any script and must not
-be substituted for it.
-
-Sanity check — the canonical file reproduces the paper's headline tail statistics on the 817-sample
-large-manoeuvre group:
-
-| Method | Superior-to-SGP4 | Severe degradation | Worst single sample |
-|---|---|---|---|
-| standard-MSE Transformer | 65.5 % | 9.3 % | −199.8 % |
-| Transformer + soft-mask | 82.7 % | 3.3 % | −77.6 % |
-
-(For reference, the `_oldmodel` file gives 56.8 % / 25.3 % / −162.6 % and 75.0 % / 4.8 % / −57.4 %.)
-kept for traceability.
+Sanity check — `fig2_cdf.csv` reproduces the paper's tail statistics on the 817-sample large-manoeuvre
+group: superior-to-SGP4 65.5 % → 82.7 %, severe degradation 9.3 % → 3.3 %, worst single sample
+−199.8 % → −77.6 %. (The `_oldmodel` file gives 56.8 % → 75.0 %, 25.3 % → 4.8 %, −162.6 % → −57.4 %.)
 
 ---
 

@@ -1,6 +1,6 @@
 # Code and derived data — *Risk-constrained deployment of AI correction for LEO orbit prediction*
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23098904.svg)](https://doi.org/10.5281/zenodo.23098904)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23105545.svg)](https://doi.org/10.5281/zenodo.23105545)
 
 This repository accompanies the manuscript
 
@@ -229,7 +229,7 @@ If you use this code or data, please cite the paper and the archived release:
 ```
 Yang K. Code for "Risk-constrained deployment of AI correction for LEO orbit prediction:
 Physics-inspired soft masking and fail-safe gating" [software]. Zenodo; 2026.
-https://doi.org/10.5281/zenodo.23098904
+https://doi.org/10.5281/zenodo.23105545
 
 The raw TLE input has **no DOI** and is not distributed. Cite its source directly:
 

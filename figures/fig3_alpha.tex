@@ -1,0 +1,117 @@
+% =====================================================================
+% Figure 3 -- alpha ablation: accuracy-safety trade-off (two panels)
+%   regime bands now fill the FULL plot height, and the regime name is
+%   written INSIDE its own band (small font) -- no clipping, no overlap.
+% RESS compliant: vector, colourblind-safe, >=6 pt lettering (min. 6 pt)
+% Compile: pdflatex fig3_alpha.tex
+% =====================================================================
+\documentclass[border=6pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc}
+\newcommand{\tC}{\fontsize{8.4}{10.2}\selectfont}
+\newcommand{\tD}{\fontsize{9.6}{11.4}\selectfont}
+\newcommand{\tR}{\fontsize{6.4}{7.6}\selectfont}   % regime labels (inside bands)
+\begin{document}
+\begin{tikzpicture}
+\pgfplotsset{
+  base/.style={
+    width=7.8cm, height=6.5cm,
+    xmin=0, xmax=1.0,
+    xtick={0,0.2,0.4,0.6,0.8,1.0},
+    minor tick num=1, grid=both, grid style={draw=black!9},
+    tick label style={font=\tC}, label style={font=\tD},
+  },
+  marks/.style={line width=1.6pt,mark size=2.3pt},
+}
+
+% ==================== (a) safety ====================
+\begin{axis}[
+  name=axL, base,
+  ymin=0, ymax=15.6, ytick={0,3,6,9,12,15},
+  xlabel={Soft-mask weight $\alpha$},
+  ylabel={Severe degradation $P(\eta<-20\%)$, \%},
+  axis y line*=left,
+]
+% ---- regime bands : FULL height (0 -> above ymax; clipped by the frame) ----
+\addplot[draw=none,fill=orange!10,forget plot] coordinates {(0.00,0) (0.20,0) (0.20,20) (0.00,20)} \closedcycle;
+\addplot[draw=none,fill=teal!10,forget plot]   coordinates {(0.30,0) (0.60,0) (0.60,20) (0.30,20)} \closedcycle;
+\addplot[draw=none,fill=black!7,forget plot]   coordinates {(0.70,0) (1.00,0) (1.00,20) (0.70,20)} \closedcycle;
+% ---- regime names INSIDE their own band, centred, near the top ----
+\node[font=\tR] at (axis cs:0.100,14.35) {conservative};
+\node[font=\tR] at (axis cs:0.450,14.35) {balanced};
+\node[font=\tR] at (axis cs:0.850,14.35) {aggressive};
+% ---- deployed alpha ----
+\addplot[draw=black!55,dashed,line width=1.0pt,forget plot] coordinates {(0.2,0) (0.2,15.6)};
+\node[font=\tR,anchor=north west] at (axis cs:0.225,12.7) {deployed $\alpha=0.2$};
+% ---- series ----
+\addplot[black,marks,mark=*] table[x=alpha,y=severe20,col sep=comma]{data/fig3_alpha.csv};
+\end{axis}
+\begin{axis}[
+  at={(axL.south west)}, anchor=south west, width=7.8cm, height=6.5cm,
+  xmin=0, xmax=1.0, ymin=-215, ymax=10,
+  xtick=\empty, ytick={0,-40,-80,-120,-160,-200},
+  ylabel={Worst-case degradation (\%)},
+  tick label style={font=\tC}, label style={font=\tD},
+  axis y line*=right, axis x line=none, axis background/.style={fill=none},
+]
+\addplot[teal!62!black,line width=1.6pt,dashed,forget plot]
+  table[x=alpha,y=worst1,col sep=comma]{data/fig3_alpha.csv};
+\addplot[only marks,mark=square*,mark size=2.3pt,teal!62!black,
+         mark options={rotate=0},forget plot]
+  table[x=alpha,y=worst1,col sep=comma]{data/fig3_alpha.csv};
+\end{axis}
+
+% ==================== (b) accuracy ====================
+\begin{axis}[
+  at={(axL.east)}, anchor=west, xshift=3.15cm,
+  name=axR, base,
+  ymin=0, ymax=31.5, ytick={0,5,10,15,20,25,30},
+  xlabel={Soft-mask weight $\alpha$},
+  ylabel={RMSE improvement (\%)},
+  axis y line*=left,
+]
+\addplot[draw=none,fill=orange!10,forget plot] coordinates {(0.00,0) (0.20,0) (0.20,40) (0.00,40)} \closedcycle;
+\addplot[draw=none,fill=teal!10,forget plot]   coordinates {(0.30,0) (0.60,0) (0.60,40) (0.30,40)} \closedcycle;
+\addplot[draw=none,fill=black!7,forget plot]   coordinates {(0.70,0) (1.00,0) (1.00,40) (0.70,40)} \closedcycle;
+\node[font=\tR] at (axis cs:0.100,29.1) {conservative};
+\node[font=\tR] at (axis cs:0.450,29.1) {balanced};
+\node[font=\tR] at (axis cs:0.850,29.1) {aggressive};
+\addplot[draw=black!55,dashed,line width=1.0pt,forget plot] coordinates {(0.2,0) (0.2,31.5)};
+\node[font=\tR,anchor=north west] at (axis cs:0.215,10.2) {deployed $\alpha=0.2$};
+\addplot[black,marks,mark=*] table[x=alpha,y=rmse_gain,col sep=comma]{data/fig3_alpha.csv};
+\end{axis}
+\begin{axis}[
+  at={(axR.south west)}, anchor=south west, width=7.8cm, height=6.5cm,
+  xmin=0, xmax=1.0, ymin=45, ymax=90,
+  xtick=\empty, ytick={50,60,70,80,90},
+  ylabel={Superior-to-SGP4 (\%)},
+  tick label style={font=\tC}, label style={font=\tD},
+  axis y line*=right, axis x line=none, axis background/.style={fill=none},
+]
+\addplot[teal!62!black,line width=1.6pt,dashed,forget plot]
+  table[x=alpha,y=superior,col sep=comma]{data/fig3_alpha.csv};
+\addplot[only marks,mark=square*,mark size=2.3pt,teal!62!black,
+         mark options={rotate=0},forget plot]
+  table[x=alpha,y=superior,col sep=comma]{data/fig3_alpha.csv};
+\end{axis}
+
+% ---------- panel titles ----------
+\node[font=\tD\bfseries,anchor=south] at ([yshift=1.5mm]axL.north) {(a) safety};
+\node[font=\tD\bfseries,anchor=south] at ([yshift=1.5mm]axR.north) {(b) accuracy};
+
+% ---------- legend rows ----------
+\node[font=\tC,anchor=west] at ([xshift=0.35cm,yshift=-1.28cm]axL.south west)
+  {\tikz\fill[black] (0,0) circle (0.85ex);\ \ Severe degradation};
+\node[font=\tC,anchor=west] at ([xshift=4.35cm,yshift=-1.28cm]axL.south west)
+  {\textcolor{teal!62!black}{\rule[0.32ex]{1.35ex}{1.35ex}}\ \ Worst-case degradation};
+\node[font=\tC,anchor=west] at ([xshift=0.35cm,yshift=-1.28cm]axR.south west)
+  {\tikz\fill[black] (0,0) circle (0.85ex);\ \ RMSE improvement};
+\node[font=\tC,anchor=west] at ([xshift=4.35cm,yshift=-1.28cm]axR.south west)
+  {\textcolor{teal!62!black}{\rule[0.32ex]{1.35ex}{1.35ex}}\ \ Superior-to-SGP4};
+\end{tikzpicture}
+\end{document}

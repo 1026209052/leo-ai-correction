@@ -1,0 +1,6 @@
+# Part A (reproducing every reported number) needs only:
+numpy>=1.24
+
+# Part B (retraining the models) additionally needs:
+pandas>=2.0
+torch>=2.0

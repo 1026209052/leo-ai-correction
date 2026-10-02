@@ -1,0 +1,6 @@
+# Store text as LF and check it out as LF everywhere.
+* text=auto eol=lf
+
+*.png binary
+*.pdf binary
+*.ps1 text eol=crlf

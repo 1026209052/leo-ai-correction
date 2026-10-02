@@ -1,0 +1,108 @@
+% =====================================================================
+% Figure 5 -- (alpha, tau) risk-constrained two-stage design rule
+%   fixes: (1) both panels' legends OUTSIDE the axes (no occlusion)
+%          (2) no long floating labels at the panel edges
+%          (3) identical marker size for the two series in each panel
+% RESS compliant: vector, colourblind-safe, >=8 pt lettering
+% Compile: pdflatex fig5_design_rule.tex
+% =====================================================================
+\documentclass[border=6pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.95]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc}
+\newcommand{\tC}{\fontsize{8.4}{10.2}\selectfont}
+\newcommand{\tD}{\fontsize{9.3}{11.1}\selectfont}
+\newcommand{\tE}{\fontsize{8.4}{10.2}\selectfont}
+\begin{document}
+\begin{tikzpicture}
+
+% ==================== (a) threshold tau ====================
+\begin{axis}[
+  name=axL, width=7.9cm, height=6.6cm,
+  xlabel={Intervention threshold $\tau$ (km)},
+  ylabel={Danger-miss rate (\%)},
+  xmin=14, xmax=38, ymin=0, ymax=17,
+  xtick={16,20,24,28,32,36}, ytick={0,4,8,12,16},
+  minor tick num=1, grid=both, grid style={draw=black!10},
+  tick label style={font=\tC}, label style={font=\tD},
+  axis y line*=left,
+]
+% zero-miss boundary (retrospective) + deployed value
+\addplot[draw=orange!85!black,line width=2.0pt,forget plot] coordinates {(24.89,0) (24.89,17)};
+\addplot[draw=teal!62!black,dashed,line width=1.5pt,forget plot] coordinates {(20,0) (20,17)};
+% danger-miss curve
+\addplot[black,line width=1.7pt,mark=*,mark size=1.9pt,mark repeat=8]
+  table[x=tau,y=miss_rate,col sep=comma]{data/fig5_tau.csv};
+\node[font=\tE,anchor=south west,text=teal!62!black] at (axis cs:14.3,1.2) {deployed $20$};
+\node[font=\tE,anchor=south west,text=orange!80!black] at (axis cs:25.4,12.4) {boundary $24.89$};
+\end{axis}
+\begin{axis}[
+  at={(axL.south west)}, anchor=south west, width=7.9cm, height=6.6cm,
+  xmin=14, xmax=38, ymin=10, ymax=108,
+  xtick=\empty, ytick={20,40,60,80,100},
+  ylabel={Intervention rate (\%)},
+  tick label style={font=\tC}, label style={font=\tD},
+  axis y line*=right, axis x line=none, axis background/.style={fill=none},
+]
+\addplot[orange!85!black,dashed,line width=1.6pt,forget plot]
+  table[x=tau,y=intervention_rate,col sep=comma]{data/fig5_tau.csv};
+\addplot[only marks,mark=square*,mark size=1.9pt,orange!85!black,
+         mark options={rotate=0},mark repeat=8,forget plot]
+  table[x=tau,y=intervention_rate,col sep=comma]{data/fig5_tau.csv};
+\end{axis}
+
+% ==================== (b) soft-mask weight alpha ====================
+\begin{axis}[
+  at={(axL.east)}, anchor=west, xshift=3.25cm,
+  name=axR, width=7.9cm, height=6.6cm,
+  xlabel={Soft-mask weight $\alpha$},
+  ylabel={Severe degradation $P(\eta<-20\%)$, \%},
+  xmin=0, xmax=1.0, ymin=0, ymax=15,
+  xtick={0,0.2,0.4,0.6,0.8,1.0}, ytick={0,2,4,6,8,10,12,14},
+  minor tick num=1, grid=both, grid style={draw=black!10},
+  tick label style={font=\tC}, label style={font=\tD},
+  axis y line*=left,
+]
+\addplot[draw=black!50,dashed,line width=1.3pt,forget plot] coordinates {(0,4) (1.0,4)};
+\addplot[draw=teal!62!black,dashed,line width=1.5pt,forget plot] coordinates {(0.2,0) (0.2,15)};
+\addplot[black,line width=1.7pt,mark=*,mark size=2.4pt]
+  table[x=alpha,y=severe20,col sep=comma]{data/fig5_alpha_inner.csv};
+\node[font=\tE,anchor=north west] at (axis cs:0.27,12.8) {rule $\alpha^\ast=0.2$};
+\node[font=\tE,anchor=north west] at (axis cs:0.30,3.55) {$\delta_\alpha=4\%$ (inner val.)};
+\end{axis}
+\begin{axis}[
+  at={(axR.south west)}, anchor=south west, width=7.9cm, height=6.6cm,
+  xmin=0, xmax=1.0, ymin=0, ymax=58,
+  xtick=\empty, ytick={0,10,20,30,40,50},
+  ylabel={RMSE improvement (\%)},
+  tick label style={font=\tC}, label style={font=\tD},
+  axis y line*=right, axis x line=none, axis background/.style={fill=none},
+]
+\addplot[orange!85!black,dashed,line width=1.6pt,forget plot]
+  table[x=alpha,y=rmse_drop,col sep=comma]{data/fig5_alpha_inner.csv};
+\addplot[only marks,mark=square*,mark size=2.4pt,orange!85!black,
+         mark options={rotate=0},forget plot]
+  table[x=alpha,y=rmse_drop,col sep=comma]{data/fig5_alpha_inner.csv};
+\end{axis}
+
+% ---------- titles ----------
+\node[font=\tD\bfseries,anchor=south] at ([yshift=1.5mm]axL.north)
+  {(a) threshold $\tau$: empirical zero-miss constraint};
+\node[font=\tD\bfseries,anchor=south] at ([yshift=1.5mm]axR.north)
+  {(b) weight $\alpha$: risk constraint (inner validation)};
+
+% ---------- legend rows (below the x-labels) ----------
+\node[font=\tE,anchor=west] at ([xshift=0.45cm,yshift=-1.28cm]axL.south west)
+  {\textcolor{black}{\tikz\fill[black](0,0) circle (0.85ex);}\ \ danger-miss rate};
+\node[font=\tE,anchor=west] at ([xshift=4.55cm,yshift=-1.28cm]axL.south west)
+  {\textcolor{orange!85!black}{\rule[0.32ex]{1.35ex}{1.35ex}}\ \ intervention rate};
+\node[font=\tE,anchor=west] at ([xshift=0.45cm,yshift=-1.28cm]axR.south west)
+  {\textcolor{black}{\tikz\fill[black](0,0) circle (0.85ex);}\ \ severe degradation};
+\node[font=\tE,anchor=west] at ([xshift=4.55cm,yshift=-1.28cm]axR.south west)
+  {\textcolor{orange!85!black}{\rule[0.32ex]{1.35ex}{1.35ex}}\ \ RMSE improvement};
+\end{tikzpicture}
+\end{document}

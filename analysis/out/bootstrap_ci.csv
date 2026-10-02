@@ -1,0 +1,6 @@
+statistic,diff,ci_lo,ci_hi,excludes_zero
+superior-to-SGP4 (pp),18.2375,14.6879,21.7870,1
+degradation median (pp),19.8015,16.9752,22.7060,1
+P5 of eta / P95 degradation (pp),99.5025,92.9593,111.1496,1
+P10 of eta / P90 degradation (pp),50.9300,41.1842,69.5985,1
+worst single sample (pp),105.2758,86.7829,108.1920,1

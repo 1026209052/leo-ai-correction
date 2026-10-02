@@ -1,0 +1,15 @@
+> 100 MB -> GitHub rejects it; distributed via the Zenodo record instead.
+> See data/README.md.
+data/starlink_tle.csv
+
+# (optional) any local backup of a partial export
+starlink_tle.csv_bak
+
+# build artefacts
+__pycache__/
+*.pyc
+*.aux
+*.log
+*.out
+figures/*.aux
+figures/*.log

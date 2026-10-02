@@ -1,7 +1,7 @@
 """Build the empirical CDF for Figure 2 from the real per-sample data.
 
-Input : figures/fig2_cdf.csv   (raw samples: sample_idx, eta_mse, eta_soft)
-Output: figures/data/fig2_cdf.csv   (empirical CDF on a uniform grid, plot-ready)
+Input : figures/data/fig2_cdf.csv   (raw samples: sample_idx, eta_mse, eta_soft)
+Output: figures/data/fig2_cdf_ecdf.csv   (empirical CDF on a uniform grid, plot-ready)
 
 Also cross-checks the sample statistics against the values reported in the
 manuscript (Table 4), so any mismatch is visible immediately.

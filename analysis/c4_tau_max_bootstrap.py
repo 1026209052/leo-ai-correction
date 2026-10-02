@@ -9,13 +9,14 @@
 再做以卫星为簇的 bootstrap（重采样卫星，取回该星的样本，重算 τ_max 与漏报率）。
 """
 import csv
+import os
 import random
 import sys
 from collections import defaultdict
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-BASE = r"E:\paper-tianjinUnivercity"
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 D_WARN = 15.0          # 碰撞预警门限 (km)
 N_EVAL = 1404          # 全体验证样本
 

@@ -10,7 +10,7 @@ import statistics
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-D = r"E:\paper-tianjinUnivercity\figures\data"
+D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "figures", "data")
 B = 10000
 SEED = 20260919
 T = 20.0

@@ -2,9 +2,11 @@
 # pdflatex is run inside a scratch directory because the sandbox blocks direct
 # writes from child processes inside the workspace.
 $ErrorActionPreference = 'Stop'
-$figdir = 'E:\paper-tianjinUnivercity\figures'
+$figdir = $PSScriptRoot
 $build  = Join-Path $env:TEMP 'figbuild'
-$pdftoppm = 'C:\Users\yangkai\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe'
+$pdftoppm = $env:PDFTOPPM
+if (-not $pdftoppm) { $pdftoppm = (Get-Command pdftoppm.exe -ErrorAction SilentlyContinue).Source }
+if (-not $pdftoppm) { throw 'pdftoppm not found: install poppler and set $env:PDFTOPPM to its path' }
 
 if (Test-Path $build) { Remove-Item $build -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $build, (Join-Path $build 'data') | Out-Null

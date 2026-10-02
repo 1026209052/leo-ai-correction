@@ -39,7 +39,6 @@ reported in the paper.
 │   └── out/                     # intermediate results consumed by Part A
 └── figures/
     ├── data/                    # derived per-sample and summary CSV files (canonical)
-    ├── fig2_cdf.csv             # per-sample eta, PRE-REFIT model (legacy — see caveat below)
     ├── make_fig2_data.py
     ├── build_figures.ps1
     └── fig{1..5}_*.{tex,pdf,png}
@@ -86,7 +85,7 @@ table to stdout; none of them needs a GPU or the raw TLE archive.
 | `c4_tau_max_bootstrap.py` | §5.9 — cluster bootstrap interval and effective sample size for the empirical zero-danger-miss boundary | `figures/data/*.csv` |
 | `design_rule_alpha_tau.py` | §5.9 — the joint `(alpha, tau)` risk-constrained design rule | `out/alpha_sweep_metrics_inner_val_ckpt.csv`, `data/fig2_cdf_all.csv`, `data/pareto_samples.csv` |
 | `fig5_design_rule_data.py` | Figure 5 input data (tau side model-free; alpha side from the alpha sweep) | same as above |
-| `tail_analysis.py` | Achieved damage floor, bootstrap CIs, and the FMEA cross-threshold table | `figures/fig2_cdf.csv` |
+| `tail_analysis.py` | Achieved damage floor, bootstrap CIs, and the FMEA cross-threshold table | `data/fig2_cdf.csv` |
 | `crosscheck_eta.py` | Independent recomputation of the six eta-derived metrics, used to cross-check the master verifier | `data/fig2_cdf.csv` |
 | `table5_strata.py` | §5.2 — performance stratified by SGP4 baseline RMSE (Table 6) | `data/fig2_cdf.csv`, `data/pareto_samples.csv` |
 | `a1_table6_definition.py` | §5.1 — how the two additional columns of the main comparison table (Table 5) are defined | `data/alpha_ablation_ensemble_results.csv`, `data/fig2_cdf.csv` |
@@ -94,15 +93,18 @@ table to stdout; none of them needs a GPU or the raw TLE archive.
 | `c1_independent_tail.py` | §5.7 — tail metrics on the earlier independent-source run | `data/spacex_68p4_verification.csv` |
 | `s57_from_csv.py` | §5.7 — every quantity of Table 11 recomputed from the independent-source CSV | `data/spacex_v5_verification.csv` |
 
-### ⚠️ Naming caveat: two different files are both called `fig2_cdf.csv`
+### ⚠️ `fig2_cdf.csv` vs `fig2_cdf_oldmodel.csv`
 
-This is the one trap in this repository. The two files hold the **same 817 samples** but **different
-per-sample `eta` values**, from two different model generations:
+`figures/data/` holds **two files with the same 817 samples but different per-sample `eta` values**,
+from two model generations:
 
-| Path | Content | Used by |
+| File | Content | Used by |
 |---|---|---|
-| `figures/data/fig2_cdf.csv` | per-sample eta of the **final model** — the values reported in the paper | all Part-A scripts except `tail_analysis.py` |
-| `figures/fig2_cdf.csv` | per-sample eta of the **pre-refit model** (an earlier generation) | `tail_analysis.py`, `make_fig2_data.py` |
+| `figures/data/fig2_cdf.csv` | per-sample eta of the **final model** — the values reported in the paper | every Part-A script, incl. `tail_analysis.py` and `make_fig2_data.py` |
+| `figures/data/fig2_cdf_oldmodel.csv` | per-sample eta of an **earlier (pre-refit) generation** | **nothing** — kept for traceability only |
+
+Always use `figures/data/fig2_cdf.csv`. The `_oldmodel` file is not an input to any script and must not
+be substituted for it.
 
 Sanity check — the canonical file reproduces the paper's headline tail statistics on the 817-sample
 large-manoeuvre group:
@@ -112,7 +114,7 @@ large-manoeuvre group:
 | standard-MSE Transformer | 65.5 % | 9.3 % | −199.8 % |
 | Transformer + soft-mask | 82.7 % | 3.3 % | −77.6 % |
 
-**Do not merge the two directories.** `figures/data/fig2_cdf_oldmodel.csv` is a copy of the legacy file,
+(For reference, the `_oldmodel` file gives 56.8 % / 25.3 % / −162.6 % and 75.0 % / 4.8 % / −57.4 %.)
 kept for traceability.
 
 ---
@@ -203,7 +205,7 @@ The Figure 2 ECDF grid is regenerated with:
 python figures/make_fig2_data.py
 ```
 
-Note that this reads the legacy `figures/fig2_cdf.csv` (see the caveat above).
+This reads `figures/data/fig2_cdf.csv`, the canonical per-sample file (see the caveat above).
 
 ---
 
@@ -230,7 +232,7 @@ Note that this reads the legacy `figures/fig2_cdf.csv` (see the caveat above).
 ## Licence
 
 * **Code** (`analysis/`, `figures/*.py`, `figures/*.ps1`, `run_all_analyses.py`) — MIT, see [LICENSE](LICENSE).
-* **Derived data** (`figures/data/`, `figures/fig2_cdf.csv`) — CC BY 4.0.
+* **Derived data** (`figures/data/`) — CC BY 4.0.
 * **Raw TLE data** (`data/starlink_tle.csv`) is third-party U.S. Government data (18 SDS, distributed
   via Space-Track). The authors assert no rights over it and claim no licence over it. It is excluded
   from Git and **not redistributed**, here or on Zenodo - see [`data/DATA_ACCESS.md`](data/DATA_ACCESS.md).
@@ -255,5 +257,6 @@ Space-Track. Two-Line Element Sets. https://www.space-track.org (accessed 2026).
 
 ## Verification note
 
-`run_all_analyses.py` exits with a non-zero status if any script fails. All 20 Part-A scripts were run to
-completion on the deposited data before release.
+`run_all_analyses.py` exits with a non-zero status if any script fails. All 20 Part-A scripts pass
+(**PASS 20 / 20**) — verified both in the working repository and from a copy of this repository placed
+in an unrelated directory, so the suite depends only on files that ship with it.

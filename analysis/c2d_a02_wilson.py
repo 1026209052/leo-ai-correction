@@ -2,10 +2,11 @@
 """α=0.2 配置下的 Wilson 区间 与 尾部比例分位（纯 CSV，本机可跑）。"""
 import csv
 import math
+import os
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-D = r"E:\paper-tianjinUnivercity\figures\data"
+D = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "figures", "data")
 
 
 def wilson(k, n, z=1.96):

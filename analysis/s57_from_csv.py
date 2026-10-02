@@ -7,7 +7,8 @@ import csv
 import os
 import statistics as st
 
-P = 'E:/paper-tianjinUnivercity/figures/data/spacex_v5_verification.csv'
+P = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'figures', 'data',
+                 'spacex_v5_verification.csv')
 rows = list(csv.DictReader(open(P, newline='', encoding='utf-8-sig')))
 n = len(rows)
 print('窗口数 =', n)

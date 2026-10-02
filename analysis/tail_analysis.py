@@ -1,6 +1,6 @@
 """Priority items 2/3/4/6/7 - analyses computable from the data already on disk.
 
-Input : figures/fig2_cdf.csv  (817 samples x {eta_mse, eta_soft})
+Input : figures/data/fig2_cdf.csv  (817 samples x {eta_mse, eta_soft})
 Output: analysis/out/*.csv + console report
 """
 import csv
@@ -9,7 +9,7 @@ import random
 import statistics as st
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-RAW = os.path.join(HERE, "..", "figures", "fig2_cdf.csv")
+RAW = os.path.join(HERE, "..", "figures", "data", "fig2_cdf.csv")
 OUT = os.path.join(HERE, "out")
 os.makedirs(OUT, exist_ok=True)
 

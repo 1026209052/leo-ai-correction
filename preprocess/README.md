@@ -55,7 +55,7 @@ on. It is the first part of the pipeline; the training and evaluation scripts li
 
 | Input | Where it comes from | Deposited here? |
 |---|---|---|
-| `starlink_tle.csv` | Space-Track (<https://www.space-track.org>). Columns `norad_id`, `tle` (an extra `change_time` column is ignored). One row per TLE; any row order is fine — step 1 sorts it explicitly. | **No** — the complete 4,572,892-row / 8,430-satellite history (753 MB) is neither in Git nor redistributed anywhere, because Space-Track's User Agreement forbids transferring U.S. Government data. Export it yourself: see [`../data/DATA_ACCESS.md`](../data/DATA_ACCESS.md). |
+| `starlink_tle.csv` | Space-Track (<https://www.space-track.org>). Columns `norad_id`, `tle` (an extra `change_time` column is ignored). One row per TLE; any row order is fine — step 1 sorts it explicitly. | **No** — the complete 4,572,892-row / 8,430-satellite history (753 MB) is neither in Git nor redistributed anywhere, because Space-Track's User Agreement forbids transferring U.S. Government data. Download it yourself from Space-Track (<https://www.space-track.org>, free account). |
 
 Every other file in the chain is produced by these scripts, and `maneuver_summary_starlink.csv` is also
 deposited in `../figures/data/` so that the Part-A analyses can run without re-running the chain.
@@ -108,7 +108,7 @@ traceability. They are not part of the chain above.
 
 ```bash
 cd preprocess
-cp ../data/starlink_tle.csv .           # after exporting it from Space-Track (see data/DATA_ACCESS.md)
+cp ../data/starlink_tle.csv .           # after downloading it from Space-Track
 python tle_to_trajectory.py             # needs starlink_tle.csv in this directory
 python mechanical_energy.py
 python training_data_extract_500_pair.py

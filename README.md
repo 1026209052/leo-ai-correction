@@ -1,6 +1,6 @@
 # Code and derived data — *Risk-constrained deployment of AI correction for LEO orbit prediction*
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23098904.svg)](https://doi.org/10.5281/zenodo.23098904)
 
 This repository accompanies the manuscript
 
@@ -237,9 +237,13 @@ Note that this reads the legacy `figures/fig2_cdf.csv` (see the caveat above).
 If you use this code or data, please cite the paper and the archived release:
 
 ```
-Yang K. Code and derived data for "Risk-constrained deployment of AI correction for LEO orbit
-prediction: Physics-inspired soft masking and fail-safe gating" [software]. Zenodo; 2026.
-https://doi.org/10.5281/zenodo.XXXXXXX
+Yang K. Code for "Risk-constrained deployment of AI correction for LEO orbit prediction:
+Physics-inspired soft masking and fail-safe gating" [software]. Zenodo; 2026.
+https://doi.org/10.5281/zenodo.23098904
+
+Yang K. Starlink TLE history used for "Risk-constrained deployment of AI correction for LEO
+orbit prediction" [dataset]. Zenodo; 2026. https://doi.org/10.5281/zenodo.XXXXXXX   <!-- TODO: fill after the
+dataset record is created; see data/ZENODO_DATASET_RECORD.md -->
 ```
 
 ---

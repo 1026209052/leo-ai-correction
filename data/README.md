@@ -29,7 +29,9 @@ The epoch range starts on 2024-03-10, consistent with the start of the observati
 At 753 MB it exceeds GitHub's 100 MB per-file limit (and Git LFS's free tier). It is therefore
 **excluded via `../.gitignore`** and distributed with the rest of the release through **Zenodo**:
 
-> **Download:** `starlink_tle.csv` from the Zenodo record — `10.5281/zenodo.XXXXXXX`
+> **Download:** `starlink_tle.csv` from the Zenodo **dataset** record — `10.5281/zenodo.XXXXXXX`
+> <!-- TODO: fill in after uploading; ready-to-paste metadata is in ZENODO_DATASET_RECORD.md.
+>      The companion *software* record is 10.5281/zenodo.23098904. -->
 
 Verify the download before using it:
 
